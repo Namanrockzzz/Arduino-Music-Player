@@ -34,98 +34,49 @@ music.quality(1);        //  Set 1 for 2x oversampling Set 0 for normal
 
 void loop()
 { 
-
-  if (digitalRead(2)==HIGH) //Avoid debounce
-  debounce1=true;
-
-  if (digitalRead(3)==HIGH)//Avoid debounce
-  debounce2=true;
-
-  if (digitalRead(8)==HIGH) //Avoid debounce
-  debounce0=true;
-  
-  if (digitalRead(2)==LOW  && debounce1 == true) //Button 1 Pressed
-  {
-  song_number++;
-  if (song_number==5)
-  {song_number=1;}
-  debounce1=false;
-  Serial.println("KEY PRESSED");
-  Serial.print("song_number=");
-  Serial.println(song_number);
-
-  if (song_number ==1)
-  {music.play("1.wav",10);} //Play song 1 from 10th second 
-
-  if (song_number ==2)
-  {music.play("2.wav",33);} //Play song 2 from 33rd second 
-
-  if (song_number ==3)
-  {music.play("3.wav");} //Play song 3 from start
-
-  if (song_number ==4)
-  {music.play("4.wav",25);} //Play song 4 from 25th second   
-}
-
-  if (digitalRead(8)==LOW  && debounce0 == true) //Button 1 Pressed
-  {
-  song_number--;
-  if (song_number==0)
-  {song_number=4;}
-  debounce0=false;
-  Serial.println("KEY PRESSED");
-  Serial.print("song_number=");
-  Serial.println(song_number);
-
-  if (song_number ==1)
-  {music.play("1.wav",10);} //Play song 1 from 10th second 
-
-  if (song_number ==2)
-  {music.play("2.wav",33);} //Play song 2 from 33rd second 
-
-  if (song_number ==3)
-  {music.play("3.wav");} //Play song 3 from start
-
-  if (song_number ==4)
-  {music.play("4.wav",25);} //Play song 4 from 25th second   
-}
-
-  if (digitalRead(3)==LOW  && debounce2 == true) //Button 2 Pressed
-  {
-  music.pause();  Serial.println("PLAY / PAUSE");
-  debounce2=false;
-  }
   if (Serial.available() > 0)
   {
     incoming = Serial.read();
-    Serial.println(incoming);
     if (incoming == '0')
     {
       song_number--;
-      if (song_number==0)
+      if (song_number==0 || song_number==-1)
       {song_number=4;}
       Serial.println("KEY PRESSED");
       Serial.print("song_number=");
       Serial.println(song_number);
     
       if (song_number ==1)
-      {music.play("1.wav",10);} //Play song 1 from 10th second 
+      {music.play("1.wav");} //Play song 1 from 10th second 
     
       if (song_number ==2)
-      {music.play("2.wav",33);} //Play song 2 from 33rd second 
+      {music.play("2.wav");} //Play song 2 from 33rd second 
     
       if (song_number ==3)
       {music.play("3.wav");} //Play song 3 from start
     
       if (song_number ==4)
-      {music.play("4.wav",25);} //Play song 4 from 25th second   
+      {music.play("4.wav");} //Play song 4 from 25th second   
     }
     else if (incoming == '1')
     {
-      music.pause();  Serial.println("PLAY / PAUSE");
+      if (song_number == 0)
+      {
+        song_number++;
+        music.play("1.wav");
+      }
+      else
+      {
+        music.pause();
+      }
+      Serial.println("PLAY / PAUSE");
     }
     else if (incoming == '2')
     {
+      if (song_number == 0)
+      {
+        song_number++;
+      }
       song_number++;
       if (song_number==5)
       {song_number=1;}
